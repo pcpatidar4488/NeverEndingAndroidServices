@@ -29,7 +29,7 @@ import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
     Intent mServiceIntent;
-    private SensorService mSensorService;
+    public SensorService mSensorService;
 
     Context ctx;
 
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
+    public boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {
@@ -65,10 +65,34 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        stopService(mServiceIntent);
+        //stopService(mServiceIntent);
         Log.i("MAINACT", "onDestroy!");
+        Intent broadcastIntent = new Intent(this, SensorRestarterBroadcastReceiver.class);
+        sendBroadcast(broadcastIntent);
         super.onDestroy();
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.i ("onPause ", "on Pause");
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        Log.i ("onResume ", "on Resume");
+        super.onResume();
     }
 }
 

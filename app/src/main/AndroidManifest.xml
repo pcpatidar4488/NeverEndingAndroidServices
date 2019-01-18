@@ -17,14 +17,28 @@
         </activity>
         <service
             android:name="oak.shef.ac.uk.testrunningservicesbackgroundrelaunched.SensorService"
-            android:enabled="true" >
+            android:exported="false"
+            android:stopWithTask="false">
         </service>
+
+       <!-- <receiver
+            android:name="oak.shef.ac.uk.testrunningservicesbackgroundrelaunched.SensorRestarterBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"
+
+            android:label="RestartServiceWhenStopped">
+        </receiver>-->
 
         <receiver
             android:name="oak.shef.ac.uk.testrunningservicesbackgroundrelaunched.SensorRestarterBroadcastReceiver"
             android:enabled="true"
             android:exported="true"
+
             android:label="RestartServiceWhenStopped">
+            <intent-filter>
+
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
         </receiver>
     </application>
 

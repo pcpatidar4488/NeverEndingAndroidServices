@@ -1,31 +1,34 @@
 package oak.shef.ac.uk.testrunningservicesbackgroundrelaunched;
 
+import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-/**
- * Created by fabio on 30/01/2016.
- */
+
 public class SensorService extends Service {
     public int counter=0;
+    Context ctx;
     public SensorService(Context applicationContext) {
         super();
         Log.i("HERE", "here I am!");
     }
 
     public SensorService() {
+        //Toast.makeText(this, "service start again", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        ctx = this;
         startTimer();
         return START_STICKY;
     }
@@ -60,6 +63,7 @@ public class SensorService extends Service {
         timerTask = new TimerTask() {
             public void run() {
                 Log.i("in timer", "in timer ++++  "+ (counter++));
+             //   Toast.makeText(getApplicationContext(), "Counter "+counter, Toast.LENGTH_SHORT).show();
             }
         };
     }
@@ -73,6 +77,14 @@ public class SensorService extends Service {
             timer.cancel();
             timer = null;
         }
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        Log.i("Tag ","On Task Remove");
+        Intent broadcastIntent = new Intent(this, SensorRestarterBroadcastReceiver.class);
+        sendBroadcast(broadcastIntent);
+        super.onTaskRemoved(rootIntent);
     }
 
     @Nullable
